@@ -1,6 +1,8 @@
 package com.evacipated.cardcrawl.modthespire;
 
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
+import com.evacipated.cardcrawl.modthespire.patching.Patcher;
+import com.evacipated.cardcrawl.modthespire.patching.enums.EnumPatcher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -522,7 +524,7 @@ class PackageJar
             urls.add(0, PrepackagedLauncher.class.getProtectionDomain().getCodeSource().getLocation());
             URL[] arr = urls.toArray(urls.toArray(new URL[0]));
 
-            Patcher.bustEnums(PrepackagedLauncher.class.getClassLoader(), arr);
+            EnumPatcher.bustEnums(PrepackagedLauncher.class.getClassLoader(), arr);
         }
 
         private static void callInitializers()

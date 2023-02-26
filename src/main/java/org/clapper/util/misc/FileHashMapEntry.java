@@ -8,9 +8,7 @@ import java.io.Serializable;
  * iterators. This class is not publicly accessible. It's stored in a
  * separate file, because inner classes cannot be serialized.
  */
-class FileHashMapEntry<K>
-    implements Serializable, Comparable<FileHashMapEntry>
-{
+class FileHashMapEntry<K> implements Serializable, Comparable<FileHashMapEntry<?>> {
     /*----------------------------------------------------------------------*\
                          Private Static Variables
     \*----------------------------------------------------------------------*/
@@ -49,42 +47,47 @@ class FileHashMapEntry<K>
      * and length of an item stored in the data file portion of a
      * <tt>FileHashMap</tt> obejct.
      *
-     * @param pos   The object's file position. The object may or may not
-     *              actually have been written there yet.
-     * @param size  The stored object's serialized size, if known, or -1
-     *              if the object has never been written. A non-negative
-     *              size value will typically be passed when an existing
-     *              <tt>FileHashMap</tt> is being reloaded from disk.
-     * @param key   The caller's key (i.e., the key the caller of
-     *              <tt>FileHashMap.put()</tt> specified). May be null.
+     * @param pos  The object's file position. The object may or may not
+     *             actually have been written there yet.
+     * @param size The stored object's serialized size, if known, or -1
+     *             if the object has never been written. A non-negative
+     *             size value will typically be passed when an existing
+     *             <tt>FileHashMap</tt> is being reloaded from disk.
+     * @param key  The caller's key (i.e., the key the caller of
+     *             <tt>FileHashMap.put()</tt> specified). May be null.
      *
      * @see #getFilePosition
      * @see #getObjectSize
      * @see #setObjectSize
      * @see FileHashMap#put
      */
-    FileHashMapEntry (long pos, int size, K key)
-    {
+    FileHashMapEntry(
+        long pos,
+        int size,
+        K key
+    ) {
         this.filePosition = pos;
-        this.objectSize   = size;
-        this.key          = key;
+        this.objectSize = size;
+        this.key = key;
     }
 
     /**
      * Create an entry with no associated key. Used primarily to record
      * file gaps. In that case, the object size is really the gap size.
      *
-     * @param pos   The object's file position. The object may or may not
-     *              actually have been written there yet.
-     * @param size  The gap size.
+     * @param pos  The object's file position. The object may or may not
+     *             actually have been written there yet.
+     * @param size The gap size.
      *
      * @see #getFilePosition
      * @see #getObjectSize
      * @see #setObjectSize
      */
-    FileHashMapEntry (long pos, int size)
-    {
-        this (pos, size, null);
+    FileHashMapEntry(
+        long pos,
+        int size
+    ) {
+        this(pos, size, null);
     }
 
     /*----------------------------------------------------------------------*\
@@ -97,15 +100,10 @@ class FileHashMapEntry<K>
      * than, equal to, or greater than the specified object. The comparison
      * key for a <tt>FileHashMapEntry</tt> is the file position value.
      *
-     * @param o  The other object
+     * @param o The other object
      */
-    public int compareTo (FileHashMapEntry o)
-    {
-        FileHashMapEntry  other    = (FileHashMapEntry) o;
-        Long              thisPos  = new Long (this.filePosition);
-        Long              otherPos = new Long (other.filePosition);
-
-        return thisPos.compareTo (otherPos);
+    public int compareTo(FileHashMapEntry o) {
+        return Long.compare(this.filePosition, o.filePosition);
     }
 
     /**
@@ -114,15 +112,16 @@ class FileHashMapEntry<K>
      *
      * @return a string representation of the contents of this object
      */
-    public String toString()
-    {
-        return ("FileHashMapEntry[filePosition=" +
-                filePosition +
-                ", objectSize=" +
-                objectSize +
-                ", key=" +
-                ((key == null) ? "<null>" : key) +
-                "]");
+    public String toString() {
+        return (
+            "FileHashMapEntry[filePosition=" +
+            filePosition +
+            ", objectSize=" +
+            objectSize +
+            ", key=" +
+            ((key == null) ? "<null>" : key) +
+            "]"
+        );
     }
 
     /*----------------------------------------------------------------------*\
@@ -138,20 +137,18 @@ class FileHashMapEntry<K>
      * @see #setKey
      * @see FileHashMap#put
      */
-    K getKey()
-    {
+    K getKey() {
         return key;
     }
 
     /**
      * Change the key for this entry
      *
-     * @param newKey  the new key to use
+     * @param newKey the new key to use
      *
      * @see #getKey
      */
-    void setKey (K newKey)
-    {
+    void setKey(K newKey) {
         this.key = newKey;
     }
 
@@ -162,8 +159,7 @@ class FileHashMapEntry<K>
      *
      * @see #setFilePosition
      */
-    long getFilePosition()
-    {
+    long getFilePosition() {
         return this.filePosition;
     }
 
@@ -174,8 +170,7 @@ class FileHashMapEntry<K>
      *
      * @see #getFilePosition
      */
-    void setFilePosition (long pos)
-    {
+    void setFilePosition(long pos) {
         this.filePosition = pos;
     }
 
@@ -187,9 +182,7 @@ class FileHashMapEntry<K>
      *
      * @see #setObjectSize
      */
-    int getObjectSize()
-        throws IllegalStateException
-    {
+    int getObjectSize() throws IllegalStateException {
         assert (this.objectSize > 0) : "No object stored yet";
         return this.objectSize;
     }
@@ -202,8 +195,7 @@ class FileHashMapEntry<K>
      *
      * @see #getObjectSize
      */
-    void setObjectSize (int size)
-    {
+    void setObjectSize(int size) {
         this.objectSize = size;
     }
 }

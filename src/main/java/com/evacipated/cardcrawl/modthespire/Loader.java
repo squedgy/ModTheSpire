@@ -1,6 +1,8 @@
 package com.evacipated.cardcrawl.modthespire;
 
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
+import com.evacipated.cardcrawl.modthespire.patching.Patcher;
+import com.evacipated.cardcrawl.modthespire.patching.enums.EnumPatcher;
 import com.evacipated.cardcrawl.modthespire.steam.SteamSearch;
 import com.evacipated.cardcrawl.modthespire.steam.SteamWorkshop;
 import com.evacipated.cardcrawl.modthespire.ui.ModSelectWindow;
@@ -426,9 +428,9 @@ public class Loader
 
                 // Patch enums
                 System.out.printf("Patching enums...");
-                Patcher.patchEnums(tmpPatchingLoader, pool, Loader.class.getResource(Loader.COREPATCHES_JAR));
+                EnumPatcher.patchEnums(pool, Loader.class.getResource(Loader.COREPATCHES_JAR));
                 // Patch SpireEnums from mods
-                Patcher.patchEnums(tmpPatchingLoader, pool, MODINFOS);
+                EnumPatcher.patchEnums(pool, MODINFOS);
                 System.out.println("Done.");
 
                 // Find and inject core patches
@@ -453,9 +455,9 @@ public class Loader
 
                 // Bust enums
                 System.out.printf("Busting enums...");
-                Patcher.bustEnums(loader, Loader.class.getResource(Loader.COREPATCHES_JAR));
+                EnumPatcher.bustEnums(loader, Loader.class.getResource(Loader.COREPATCHES_JAR));
                 // Bust SpireEnums from mods
-                Patcher.bustEnums(loader, MODINFOS);
+                EnumPatcher.bustEnums(loader, MODINFOS);
                 System.out.println("Done.");
                 System.out.println();
 

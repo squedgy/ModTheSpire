@@ -32,9 +32,6 @@ public class ByteArrayMapClassPath implements ClassPath
     }
 
     @Override
-    public void close() {}
-
-    @Override
     public InputStream openClassfile(String classname)
     {
         Info classInfo = classes.get(classname);

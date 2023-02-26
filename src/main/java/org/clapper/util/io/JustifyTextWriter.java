@@ -3,6 +3,7 @@ package org.clapper.util.io;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Objects;
 
 import org.clapper.util.text.TextUtil;
 
@@ -68,14 +69,13 @@ import org.clapper.util.text.TextUtil;
  * </ol>
  *
  * @see WordWrapWriter
- * @see TextUtil#rightJustifyString(String,int)
- * @see TextUtil#leftJustifyString(String,int)
- * @see TextUtil#centerString(String,int)
+ * @see TextUtil#rightJustifyString(String, int)
+ * @see TextUtil#leftJustifyString(String, int)
+ * @see TextUtil#centerString(String, int)
  * @see java.io.Writer
  * @see java.io.PrintWriter
  */
-public class JustifyTextWriter extends PrintWriter
-{
+public class JustifyTextWriter extends PrintWriter {
     /*----------------------------------------------------------------------*\
                              Public Constants
     \*----------------------------------------------------------------------*/
@@ -83,8 +83,7 @@ public class JustifyTextWriter extends PrintWriter
     /**
      * The default line length.
      */
-    public static final int DEFAULT_LINE_LENGTH =
-                                       WordWrapWriter.DEFAULT_LINE_LENGTH;
+    public static final int DEFAULT_LINE_LENGTH = WordWrapWriter.DEFAULT_LINE_LENGTH;
 
     /*----------------------------------------------------------------------*\
                              Private Constants
@@ -107,7 +106,7 @@ public class JustifyTextWriter extends PrintWriter
     /**
      * Current line being assembled. println() consumes this buffer.
      */
-    private StringBuffer buffer = new StringBuffer();
+    private final StringBuffer buffer = new StringBuffer();
 
     /**
      * Justification type
@@ -123,19 +122,21 @@ public class JustifyTextWriter extends PrintWriter
      * output to the specified <tt>Writer</tt> object, using the default
      * line length of 79.
      *
-     * @param output         Where the output goes.
-     * @param justification  How to justify the output
+     * @param output        Where the output goes.
+     * @param justification How to justify the output
      *
      * @see #DEFAULT_LINE_LENGTH
-     * @see #JustifyTextWriter(Writer,JustifyStyle,int)
-     * @see #JustifyTextWriter(PrintWriter,JustifyStyle)
-     * @see #JustifyTextWriter(OutputStream,JustifyStyle)
+     * @see #JustifyTextWriter(Writer, JustifyStyle, int)
+     * @see #JustifyTextWriter(PrintWriter, JustifyStyle)
+     * @see #JustifyTextWriter(OutputStream, JustifyStyle)
      * @see JustifyStyle
      * @see java.io.Writer
      */
-    public JustifyTextWriter (Writer output, JustifyStyle justification)
-    {
-        this (new PrintWriter (output), justification, DEFAULT_LINE_LENGTH);
+    public JustifyTextWriter(
+        Writer output,
+        JustifyStyle justification
+    ) {
+        this(new PrintWriter(output), justification, DEFAULT_LINE_LENGTH);
     }
 
     /**
@@ -143,20 +144,21 @@ public class JustifyTextWriter extends PrintWriter
      * output to the specified <tt>PrintWriter</tt> object, using the default
      * line length of 79.
      *
-     * @param output         Where the output goes.
-     * @param justification  How to justify the output
+     * @param output        Where the output goes.
+     * @param justification How to justify the output
      *
      * @see #DEFAULT_LINE_LENGTH
-     * @see #JustifyTextWriter(Writer,JustifyStyle)
-     * @see #JustifyTextWriter(PrintWriter,JustifyStyle,int)
-     * @see #JustifyTextWriter(OutputStream,JustifyStyle)
+     * @see #JustifyTextWriter(Writer, JustifyStyle)
+     * @see #JustifyTextWriter(PrintWriter, JustifyStyle, int)
+     * @see #JustifyTextWriter(OutputStream, JustifyStyle)
      * @see JustifyStyle
      * @see java.io.Writer
      */
-    public JustifyTextWriter (PrintWriter  output,
-                              JustifyStyle justification)
-    {
-        this (output, justification, DEFAULT_LINE_LENGTH);
+    public JustifyTextWriter(
+        PrintWriter output,
+        JustifyStyle justification
+    ) {
+        this(output, justification, DEFAULT_LINE_LENGTH);
     }
 
     /**
@@ -164,20 +166,21 @@ public class JustifyTextWriter extends PrintWriter
      * output to the specified <tt>OutputStream</tt> object, using the
      * default line length of 79.
      *
-     * @param output         Where the output goes.
-     * @param justification  How to justify the output
+     * @param output        Where the output goes.
+     * @param justification How to justify the output
      *
      * @see #DEFAULT_LINE_LENGTH
-     * @see #JustifyTextWriter(OutputStream,JustifyStyle,int)
-     * @see #JustifyTextWriter(Writer,JustifyStyle)
-     * @see #JustifyTextWriter(PrintWriter,JustifyStyle)
+     * @see #JustifyTextWriter(OutputStream, JustifyStyle, int)
+     * @see #JustifyTextWriter(Writer, JustifyStyle)
+     * @see #JustifyTextWriter(PrintWriter, JustifyStyle)
      * @see JustifyStyle
      * @see java.io.OutputStream
      */
-    public JustifyTextWriter (OutputStream output,
-                              JustifyStyle justification)
-    {
-        this (output, justification, DEFAULT_LINE_LENGTH);
+    public JustifyTextWriter(
+        OutputStream output,
+        JustifyStyle justification
+    ) {
+        this(output, justification, DEFAULT_LINE_LENGTH);
     }
 
     /**
@@ -185,22 +188,23 @@ public class JustifyTextWriter extends PrintWriter
      * output to the specified <tt>Writer</tt> object, using the specified
      * line length.
      *
-     * @param output         Where the output goes.
-     * @param justification  How to justify the output
-     * @param lineLength     The desired line length.
+     * @param output        Where the output goes.
+     * @param justification How to justify the output
+     * @param lineLength    The desired line length.
      *
      * @see #DEFAULT_LINE_LENGTH
-     * @see #JustifyTextWriter(Writer,JustifyStyle)
-     * @see #JustifyTextWriter(PrintWriter,JustifyStyle,int)
-     * @see #JustifyTextWriter(OutputStream,JustifyStyle,int)
+     * @see #JustifyTextWriter(Writer, JustifyStyle)
+     * @see #JustifyTextWriter(PrintWriter, JustifyStyle, int)
+     * @see #JustifyTextWriter(OutputStream, JustifyStyle, int)
      * @see JustifyStyle
      * @see java.io.Writer
      */
-    public JustifyTextWriter (Writer       output,
-                              JustifyStyle justification,
-                              int          lineLength)
-    {
-        this (new PrintWriter (output), justification, lineLength);
+    public JustifyTextWriter(
+        Writer output,
+        JustifyStyle justification,
+        int lineLength
+    ) {
+        this(new PrintWriter(output), justification, lineLength);
     }
 
     /**
@@ -208,25 +212,26 @@ public class JustifyTextWriter extends PrintWriter
      * output to the specified <tt>PrintWriter</tt> object, using the
      * specified line length.
      *
-     * @param output         Where the output goes.
-     * @param justification  How to justify the output
-     * @param lineLength     The desired line length.
+     * @param output        Where the output goes.
+     * @param justification How to justify the output
+     * @param lineLength    The desired line length.
      *
      * @see #DEFAULT_LINE_LENGTH
-     * @see #JustifyTextWriter(PrintWriter,JustifyStyle)
-     * @see #JustifyTextWriter(Writer,JustifyStyle,int)
-     * @see #JustifyTextWriter(OutputStream,JustifyStyle,int)
+     * @see #JustifyTextWriter(PrintWriter, JustifyStyle)
+     * @see #JustifyTextWriter(Writer, JustifyStyle, int)
+     * @see #JustifyTextWriter(OutputStream, JustifyStyle, int)
      * @see JustifyStyle
      * @see java.io.Writer
      */
-    public JustifyTextWriter (PrintWriter  output,
-                              JustifyStyle justification,
-                              int          lineLength)
-    {
-        super (output);
+    public JustifyTextWriter(
+        PrintWriter output,
+        JustifyStyle justification,
+        int lineLength
+    ) {
+        super(output);
         writer = output;
-        setLineLength (lineLength);
-        setJustification (justification);
+        setLineLength(lineLength);
+        setJustification(justification);
     }
 
     /**
@@ -234,25 +239,26 @@ public class JustifyTextWriter extends PrintWriter
      * output to the specified <tt>OutputStream</tt> object, using the
      * specified line length.
      *
-     * @param output         Where the output goes.
-     * @param justification  How to justify the output
-     * @param lineLength     The desired line length.
+     * @param output        Where the output goes.
+     * @param justification How to justify the output
+     * @param lineLength    The desired line length.
      *
      * @see #DEFAULT_LINE_LENGTH
-     * @see #JustifyTextWriter(OutputStream,JustifyStyle)
-     * @see #JustifyTextWriter(Writer,JustifyStyle,int)
-     * @see #JustifyTextWriter(PrintWriter,JustifyStyle,int)
+     * @see #JustifyTextWriter(OutputStream, JustifyStyle)
+     * @see #JustifyTextWriter(Writer, JustifyStyle, int)
+     * @see #JustifyTextWriter(PrintWriter, JustifyStyle, int)
      * @see JustifyStyle
      * @see java.io.Writer
      */
-    public JustifyTextWriter (OutputStream output,
-                              JustifyStyle justification,
-                              int          lineLength)
-    {
-        super (output);
-        writer = new PrintWriter (output);
-        setLineLength (lineLength);
-        setJustification (justification);
+    public JustifyTextWriter(
+        OutputStream output,
+        JustifyStyle justification,
+        int lineLength
+    ) {
+        super(output);
+        writer = new PrintWriter(output);
+        setLineLength(lineLength);
+        setJustification(justification);
     }
 
     /*----------------------------------------------------------------------*\
@@ -262,8 +268,7 @@ public class JustifyTextWriter extends PrintWriter
     /**
      * Flush the stream and check its error state.
      */
-    public boolean checkError()
-    {
+    public boolean checkError() {
         return super.checkError();
     }
 
@@ -271,8 +276,7 @@ public class JustifyTextWriter extends PrintWriter
      * Close the stream, flushing it first. Closing a previously-closed
      * stream has no effect.
      */
-    public void close()
-    {
+    public void close() {
         super.close();
     }
 
@@ -283,8 +287,7 @@ public class JustifyTextWriter extends PrintWriter
      * or byte stream, flush it. Thus one flush() invocation will flush all
      * the buffers in a chain of Writers and OutputStreams.
      */
-    public void flush()
-    {
+    public void flush() {
         flushBufferedLine();
         writer.flush();
     }
@@ -296,11 +299,9 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @see #setJustification
      */
-    public JustifyStyle getJustification()
-    {
+    public JustifyStyle getJustification() {
         return justification;
     }
-
 
     /**
      * Set or change the current justification style.
@@ -309,8 +310,7 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @see #setJustification
      */
-    public void setJustification (JustifyStyle style)
-    {
+    public void setJustification(JustifyStyle style) {
         justification = style;
     }
 
@@ -319,8 +319,7 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @return The line length.
      */
-    public int getLineLength()
-    {
+    public int getLineLength() {
         return lineLength;
     }
 
@@ -332,14 +331,11 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @throws IndexOutOfBoundsException the value is negative
      */
-    public void setLineLength (int newLineLength)
-        throws IndexOutOfBoundsException
-    {
-        if (newLineLength < 0)
-        {
-            throw new IndexOutOfBoundsException ("Line length of " +
-                                                 newLineLength +
-                                                 " is negative.");
+    public void setLineLength(int newLineLength) throws IndexOutOfBoundsException {
+        if(newLineLength < 0) {
+            throw new IndexOutOfBoundsException("Line length of " +
+                                                newLineLength +
+                                                " is negative.");
         }
 
         lineLength = newLineLength;
@@ -348,103 +344,82 @@ public class JustifyTextWriter extends PrintWriter
     /**
      * Print a boolean.
      *
-     * @param b  The boolean to print
+     * @param b The boolean to print
      */
-    public void print (boolean b)
-    {
-        Boolean B = new Boolean (b);
-
-        write (B.toString());
+    public void print(boolean b) {
+        write(Boolean.toString(b));
     }
 
     /**
      * Print a character.
      *
-     * @param c  The character to print
+     * @param c The character to print
      */
-    public void print (char c)
-    {
-        write (c);
+    public void print(char c) {
+        write(c);
     }
 
     /**
      * Print an array of characters.
      *
-     * @param s  The array of characters to print
+     * @param s The array of characters to print
      */
-    public void print (char s[])
-    {
-        write (s, 0, s.length);
+    public void print(char[] s) {
+        write(s, 0, s.length);
     }
 
     /**
      * Print a double.
      *
-     * @param d  The double floating point number to print
+     * @param d The double floating point number to print
      */
-    public void print (double d)
-    {
-        Double D = new Double (d);
-
-        write (D.toString());
+    public void print(double d) {
+        write(Double.toString(d));
     }
 
     /**
      * Print a float.
      *
-     * @param f  The floating point number to print
+     * @param f The floating point number to print
      */
-    public void print (float f)
-    {
-        Float F = new Float (f);
-
-        write (F.toString());
+    public void print(float f) {
+        write(Float.toString(f));
     }
 
     /**
      * Print an integer.
      *
-     * @param i  The integer to print
+     * @param i The integer to print
      */
-    public void print (int i)
-    {
-        Integer I = new Integer (i);
-
-        write (I.toString());
+    public void print(int i) {
+        write(Integer.toString(i));
     }
 
     /**
      * Print a long.
      *
-     * @param l  The long to print
+     * @param l The long to print
      */
-    public void print (long l)
-    {
-        Long L = new Long (l);
-
-        write (L.toString());
+    public void print(long l) {
+        write(Long.toString(l));
     }
 
     /**
      * Print a short.
      *
-     * @param s  The short to print
+     * @param s The short to print
      */
-    public void print (short s)
-    {
-        Short S = new Short (s);
-
-        write (S.toString());
+    public void print(short s) {
+        write(Short.toString(s));
     }
 
     /**
      * Print a String.
      *
-     * @param s  The String to print.
+     * @param s The String to print.
      */
-    public void print (String s)
-    {
-        write (s);
+    public void print(String s) {
+        write(s);
     }
 
     /**
@@ -452,16 +427,14 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @param x The object to print.
      */
-    public void print (Object x)
-    {
-        write (x.toString());
+    public void print(Object x) {
+        write(Objects.toString(x));
     }
 
     /**
      * End the current line.
      */
-    public void println()
-    {
+    public void println() {
         flushBufferedLine();
         writer.println();
     }
@@ -469,105 +442,85 @@ public class JustifyTextWriter extends PrintWriter
     /**
      * Print a boolean and finish the line.
      *
-     * @param b  The boolean to print
+     * @param b The boolean to print
      */
-    public void println (boolean b)
-    {
-        Boolean B = new Boolean (b);
-
-        println (B.toString());
+    public void println(boolean b) {
+        println(Boolean.toString(b));
     }
 
     /**
      * Print a character and finish the line.
      *
-     * @param c  The character to print
+     * @param c The character to print
      */
-    public void println (char c)
-    {
-        println (c);
+    public void println(char c) {
+        println(Character.toString(c));
     }
 
     /**
      * Print an array of characters.
      *
-     * @param s  The array of characters to print
+     * @param s The array of characters to print
      */
-    public void println (char s[])
-    {
-        for (int i = 0; i < s.length; i++)
-            print (s[i]);
+    public void println(char[] s) {
+        for(int i = 0; i < s.length; i++) {
+            print(s[i]);
+        }
         println();
     }
 
     /**
      * Print a double and finish the line.
      *
-     * @param d  The double floating point number to print
+     * @param d The double floating point number to print
      */
-    public void println (double d)
-    {
-        Double D = new Double (d);
-
-        println (D.toString());
+    public void println(double d) {
+        println(Double.toString(d));
     }
 
     /**
      * Print a float and finish the line.
      *
-     * @param f  The floating point number to print
+     * @param f The floating point number to print
      */
-    public void println (float f)
-    {
-        Float F = new Float (f);
-
-        println (F.toString());
+    public void println(float f) {
+        println(Float.toString(f));
     }
 
     /**
      * Print an integer.
      *
-     * @param i  The integer to print
+     * @param i The integer to print
      */
-    public void println (int i)
-    {
-        Integer I = new Integer (i);
-
-        println (I.toString());
+    public void println(int i) {
+        println(Integer.toString(i));
     }
 
     /**
      * Print a long and finish the line.
      *
-     * @param l  The long to print
+     * @param l The long to print
      */
-    public void println (long l)
-    {
-        Long L = new Long (l);
-
-        println (L.toString());
+    public void println(long l) {
+        println(Long.toString(l));
     }
 
     /**
      * Print a short and finish the line.
      *
-     * @param s  The short to print
+     * @param s The short to print
      */
-    public void println (short s)
-    {
-        Short S = new Short (s);
-
-        println (S.toString());
+    public void println(short s) {
+        println(Short.toString(s));
     }
 
     /**
      * Print a String and finish the line.
      *
-     * @param s  The String to print.
+     * @param s The String to print.
      */
-    public void println (String s)
-    {
-        print (s);
+    public void println(String s) {
+        print(s);
         println();
     }
 
@@ -576,9 +529,8 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @param x The object to print.
      */
-    public void println (Object x)
-    {
-        println (x.toString());
+    public void println(Object x) {
+        println(Objects.toString(x));
     }
 
     /**
@@ -589,9 +541,8 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @param c Character to write
      */
-    public void write (int c)
-    {
-        buffer.append ((char) c);
+    public void write(int c) {
+        buffer.append((char) c);
     }
 
     /**
@@ -604,10 +555,14 @@ public class JustifyTextWriter extends PrintWriter
      * @param off  Offset from which to start writing characters
      * @param len  Number of characters to write
      */
-    public void write (char cbuf[], int off, int len)
-    {
-        for (; (off < cbuf.length) && (len > 0); len--, off++)
-            write (cbuf[off]);
+    public void write(
+        char[] cbuf,
+        int off,
+        int len
+    ) {
+        for(; (off < cbuf.length) && (len > 0); len--, off++) {
+            write(cbuf[off]);
+        }
     }
 
     /**
@@ -616,15 +571,18 @@ public class JustifyTextWriter extends PrintWriter
      * a new line. Each line is indented according to this object's
      * defined indentation level.
      *
-     * @param s    String from which to write
-     * @param off  Offset from which to start writing characters
-     * @param len  Number of characters to write
+     * @param s   String from which to write
+     * @param off Offset from which to start writing characters
+     * @param len Number of characters to write
      */
-    public void write (String s, int off, int len)
-    {
+    public void write(
+        String s,
+        int off,
+        int len
+    ) {
         char[] cbuf = s.toCharArray();
 
-        this.write (cbuf, off, len);
+        this.write(cbuf, off, len);
     }
 
     /**
@@ -632,11 +590,10 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @param s String to write
      */
-    public void write (String s)
-    {
+    public void write(String s) {
         char[] cbuf = s.toCharArray();
 
-        this.write (cbuf, 0, cbuf.length);
+        this.write(cbuf, 0, cbuf.length);
     }
 
     /**
@@ -644,9 +601,8 @@ public class JustifyTextWriter extends PrintWriter
      *
      * @param cbuf Array of characters to write
      */
-    public void write (char[] cbuf)
-    {
-        this.write (cbuf, 0, cbuf.length);
+    public void write(char[] cbuf) {
+        this.write(cbuf, 0, cbuf.length);
     }
 
     /*----------------------------------------------------------------------*\
@@ -657,28 +613,25 @@ public class JustifyTextWriter extends PrintWriter
      * Flushes any characters in the buffered output line, then clears the
      * buffer.
      */
-    private synchronized void flushBufferedLine()
-    {
-        if (buffer.length() > 0)
-        {
+    private synchronized void flushBufferedLine() {
+        if(buffer.length() > 0) {
             String s = buffer.toString();
 
-            switch (justification)
-            {
+            switch(justification) {
                 case LEFT_JUSTIFY:
-                    writer.print (s);
+                    writer.print(s);
                     break;
 
                 case RIGHT_JUSTIFY:
-                    writer.print (TextUtil.rightJustifyString (s, lineLength));
+                    writer.print(TextUtil.rightJustifyString(s, lineLength));
                     break;
 
                 case CENTER:
-                    writer.print (TextUtil.centerString (s, lineLength));
+                    writer.print(TextUtil.centerString(s, lineLength));
                     break;
             }
 
-            buffer.setLength (0);
+            buffer.setLength(0);
         }
     }
 }

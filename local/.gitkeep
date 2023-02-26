@@ -1,0 +1,2 @@
+This is a directory with the intention to house local-only dependencies. Currently it only really matters for
+slay-the-spire's jar (desktop-1.0.jar)
