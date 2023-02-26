@@ -1,23 +1,8 @@
-dependencies {
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.9.5'
-    implementation 'com.badlogicgames.gdx:gdx-controllers-lwjgl3:1.9.5'
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
 
+dependencies {
     implementation project(':patches')
     compileOnly project(':core')
 }
