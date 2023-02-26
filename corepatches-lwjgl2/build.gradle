@@ -19,5 +19,9 @@ dependencies {
     implementation 'com.badlogicgames.gdx:gdx-controllers-lwjgl3:1.9.5'
 
     implementation project(':patches')
-    implementation project(':core')
+    compileOnly project(':core')
+}
+
+jar {
+    archiveFileName = "$project.version-corepatches.jar"
 }
