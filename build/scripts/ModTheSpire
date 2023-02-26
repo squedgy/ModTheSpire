@@ -114,7 +114,7 @@ case "$( uname )" in                #(
   NONSTOP* )        nonstop=true ;;
 esac
 
-CLASSPATH=$APP_HOME/lib/ModTheSpire-3.30.3.jar:$APP_HOME/lib/commons-lang3-3.7.jar:$APP_HOME/lib/gson-2.8.9.jar:$APP_HOME/lib/javassist-3.29.2-GA.jar:$APP_HOME/lib/scannotation-1.0.3.jar:$APP_HOME/lib/commons-logging-1.2.jar:$APP_HOME/lib/asm-6.2.1.jar:$APP_HOME/lib/semver4j-2.2.0.jar:$APP_HOME/lib/steamworks4j-1.9.0.jar:$APP_HOME/lib/kotlin-stdlib-jdk8-1.4.10.jar:$APP_HOME/lib/kotlin-reflect-1.4.10.jar:$APP_HOME/lib/gdx-controllers-lwjgl3-1.9.5.jar:$APP_HOME/lib/gdx-backend-lwjgl3-1.9.5.jar:$APP_HOME/lib/lwjgl-glfw-3.3.1.jar:$APP_HOME/lib/lwjgl-glfw-3.3.1-natives-windows.jar:$APP_HOME/lib/lwjgl-glfw-3.3.1-natives-linux.jar:$APP_HOME/lib/lwjgl-glfw-3.3.1-natives-macos.jar:$APP_HOME/lib/lwjgl-opengl-3.3.1.jar:$APP_HOME/lib/lwjgl-openal-3.3.1.jar:$APP_HOME/lib/lwjgl-openal-3.3.1-natives-windows.jar:$APP_HOME/lib/lwjgl-openal-3.3.1-natives-linux.jar:$APP_HOME/lib/lwjgl-openal-3.3.1-natives-macos.jar:$APP_HOME/lib/lwjgl-jemalloc-3.1.0.jar:$APP_HOME/lib/lwjgl-jemalloc-3.1.0-natives-windows.jar:$APP_HOME/lib/lwjgl-jemalloc-3.1.0-natives-linux.jar:$APP_HOME/lib/lwjgl-jemalloc-3.1.0-natives-macos.jar:$APP_HOME/lib/lwjgl-3.3.1.jar:$APP_HOME/lib/lwjgl-3.3.1-natives-windows.jar:$APP_HOME/lib/lwjgl-3.3.1-natives-linux.jar:$APP_HOME/lib/lwjgl-3.3.1-natives-macos.jar:$APP_HOME/lib/javassist-3.12.1.GA.jar:$APP_HOME/lib/kotlin-stdlib-jdk7-1.4.10.jar:$APP_HOME/lib/kotlin-stdlib-1.4.10.jar:$APP_HOME/lib/gdx-controllers-1.9.5.jar:$APP_HOME/lib/gdx-1.9.5.jar:$APP_HOME/lib/jlayer-1.0.1-gdx.jar:$APP_HOME/lib/jorbis-0.0.17.jar:$APP_HOME/lib/kotlin-stdlib-common-1.4.10.jar:$APP_HOME/lib/annotations-13.0.jar
+CLASSPATH=$APP_HOME/lib/ModTheSpire-3.30.3.jar
 
 
 # Determine the Java command to use to start the JVM.
@@ -201,7 +201,7 @@ fi
 
 set -- \
         -classpath "$CLASSPATH" \
-        com.evacipated.cardcrawl.modthespire.Loader \
+         \
         "$@"
 
 # Use "xargs" to parse quoted args.

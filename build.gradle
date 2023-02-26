@@ -6,21 +6,43 @@ import org.gradle.nativeplatform.platform.internal.DefaultOperatingSystem
  */
 
 plugins {
-    id 'java'
-    id 'maven-publish'
+//    id 'java'
+//    id 'maven-publish'
     id 'idea'
-    id 'application'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+//    id 'application'
+//    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
+def localJar = files("$projectDir/local/desktop-1.0.jar")
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+//    apply plugin: 'com.github.johnrengelman.shadow'
+
+    repositories {
+        mavenLocal()
+        maven {
+            url = uri('https://repo.maven.apache.org/maven2/')
+        }
+    }
+
+    java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+    dependencies {
+        implementation 'org.apache.commons:commons-lang3:3.7'
+        implementation 'com.google.code.gson:gson:2.8.9'
+        implementation 'org.javassist:javassist:3.29.2-GA'
+        implementation 'org.scannotation:scannotation:1.0.3'
+        implementation 'commons-logging:commons-logging:1.2'
+        implementation 'org.ow2.asm:asm:6.2.1'
+        implementation 'com.vdurmont:semver4j:2.2.0'
+        implementation 'com.code-disaster.steamworks4j:steamworks4j:1.9.0'
+
+        implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.26'
+
+        compileOnly localJar
     }
 }
-
-mainClassName = "com.evacipated.cardcrawl.modthespire.Loader"
 
 task LoadVersion {
     doLast {
@@ -30,72 +52,62 @@ task LoadVersion {
     }
 }
 
-jar {
-    dependsOn LoadVersion
-    manifest {
-        attributes(
-            "Main-Class": mainClassName
-        )
-    }
-}
+//mainClassName = "com.evacipated.cardcrawl.modthespire.Loader"
 
-shadowJar {
+//jar {
+//    dependsOn LoadVersion
+//    manifest {
+//        attributes(
+//            "Main-Class": mainClassName
+//        )
+//    }
+//}
 
-}
-
-dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.7'
-    implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'org.javassist:javassist:3.29.2-GA'
-    implementation 'org.scannotation:scannotation:1.0.3'
-    implementation 'commons-logging:commons-logging:1.2'
-    implementation 'org.ow2.asm:asm:6.2.1'
-    implementation 'com.vdurmont:semver4j:2.2.0'
-    implementation 'com.code-disaster.steamworks4j:steamworks4j:1.9.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.4.10'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.9.5'
-    implementation 'com.badlogicgames.gdx:gdx-controllers-lwjgl3:1.9.5'
-    compileOnly files("local/desktop-1.0.jar")
-}
+//dependencies {
+//    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10'
+//    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.4.10'
+//    implementation 'org.lwjgl:lwjgl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
+//    implementation 'org.lwjgl:lwjgl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
+//    implementation 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.9.5'
+//    implementation 'com.badlogicgames.gdx:gdx-controllers-lwjgl3:1.9.5'
+//}
 
 group = 'com.evacipated.cardcrawl'
 version = '3.30.3'
 description = 'ModTheSpire'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            from(components.java)
+//        }
+//    }
+//}
+
+allprojects {
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
         }
     }
-}
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
     }
 }
 
