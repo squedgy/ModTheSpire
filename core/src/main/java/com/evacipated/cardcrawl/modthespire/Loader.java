@@ -310,8 +310,11 @@ public class Loader {
             Semver jvmVersion = new Semver(javaVersion, Semver.SemverType.LOOSE);
             Semver minLwjgl3RequiredVersion = new Semver("12.0.0", Semver.SemverType.LOOSE);
 
+            boolean preJava9 = javaVersion.startsWith("1.");
+            boolean requiresLwjgl3 = jvmVersion.isGreaterThanOrEqualTo(minLwjgl3RequiredVersion);
+
             // Since 11 (OpenJDK) works I'm setting it to 12, if there are issues we can change this test
-            if(!LWJGL3_ENABLED && javaVersion.startsWith("1.") && jvmVersion.isGreaterThanOrEqualTo(minLwjgl3RequiredVersion)) {
+            if(!LWJGL3_ENABLED && !preJava9 && requiresLwjgl3) {
                 LOG.info("Forcing LWJGL3 usage as the java version is detected to be {} which is assumed to not work with LWJGL 2.", javaVersion);
                 LWJGL3_ENABLED = true;
             }
