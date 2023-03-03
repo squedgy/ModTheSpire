@@ -97,14 +97,18 @@ jar {
 
 task install {
     dependsOn build
+    dependsOn project(":agent").tasks.jar
 
     doLast {
+
         def props = new Properties()
         def failed
         def targetPropFile = file("${projectDir}/install.properties")
         try (def fis = new FileInputStream(targetPropFile)) {
             props.load(fis)
-            failed = !props.hasProperty("spire.dir") || props.get("spire.dir") == null || props.get("spire.dir") == ""
+            logger.lifecycle("loaded props: ${props["spire.dir"]}")
+            def target = props["spire.dir"]
+            failed = target == null || target == ""
         } catch(IOException e) {
             failed = true
             logger.lifecycle("Failed to read install.properties: ", e.message)
@@ -112,7 +116,7 @@ task install {
         }
 
         if(failed) {
-            props.put("spir.dir", "")
+            props.put("spire.dir", "")
             try (def fos = new FileOutputStream(file(targetPropFile))) {
                 props.save(fos, null)
             }
@@ -129,16 +133,24 @@ task install {
         if(!desktopJar.exists()) throw new RuntimeException("'${stsDir}' does not appear to be a valid slay the spire install directory!")
 
         def os = DefaultNativePlatform.currentOperatingSystem;
-        def outputFiles = ["$buildDir/libs/ModTheSpire.jar"]
+
+        def outputFiles = jar.outputs.files + project(":agent").tasks.jar.outputs.files
         if(os.isWindows()) {
-            outputFiles.add("$projectDir/MTS.cmd")
+            outputFiles += files("$projectDir/MTS.ps1")
         } else {
-            outputFiles.add("$projectDir/MTS.sh")
+            outputFiles += files("$projectDir/MTS.sh")
         }
 
+        logger.lifecycle("Outputing the follwing files info $stsDir")
+        for(def thing : outputFiles) {
+            logger.lifecycle("  $thing.name")
+        }
         copy {
-            include outputFiles
+            from outputFiles
             into stsDir
+
+            // Remove project version suffix from jars
+            rename "(.*)-${version}.jar", '$1.jar'
         }
     }
 }

@@ -59,3 +59,4 @@ dependency-reduced-pom.xml
 /build/
 /*/build/
 .gradle
+/install.properties
