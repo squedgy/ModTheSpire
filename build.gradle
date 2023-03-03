@@ -95,42 +95,35 @@ jar {
     }
 }
 
+task setupLocal {
+    doLast {
+        def props = getInstallProperties()
+
+        def targetFile = "$projectDir/local/desktop-1.0.jar"
+        if(file(targetFile).exists()) {
+            logger.lifecycle "Slay the spire jar already present"
+            return
+        };
+
+        enforceStsDirExists(props)
+        def stsDir = slayTheSpireDir(props);
+        def stsJar = slayTheSpireJar(stsDir)
+
+        copy {
+            from files(stsJar)
+            into "$projectDir/local"
+        }
+    }
+}
+
 task install {
     dependsOn build
     dependsOn project(":agent").tasks.jar
 
     doLast {
-
-        def props = new Properties()
-        def failed
-        def targetPropFile = file("${projectDir}/install.properties")
-        try (def fis = new FileInputStream(targetPropFile)) {
-            props.load(fis)
-            logger.lifecycle("loaded props: ${props["spire.dir"]}")
-            def target = props["spire.dir"]
-            failed = target == null || target == ""
-        } catch(IOException e) {
-            failed = true
-            logger.lifecycle("Failed to read install.properties: ", e.message)
-            logger.lifecycle("Please put the absolute path to your slay the spire installation (The directory containing desktop-1.0.jar) as the value of spire.dir in ${targetPropFile.absolutePath}")
-        }
-
-        if(failed) {
-            props.put("spire.dir", "")
-            try (def fos = new FileOutputStream(file(targetPropFile))) {
-                props.save(fos, null)
-            }
-            throw new RuntimeException("No sts install directory given. Please populate '${targetPropFile.absolutePath}'s \"spire.dir\" property with your slay-the-spire directory (the one with desktop-1.0.jar). ");
-        }
-
-        def stsDir = file(props["spire.dir"])
-        if(!stsDir.exists() || !stsDir.isDirectory()) {
-            logger.lifecycle("${stsDir} does not appear to be a directory/exist!")
-            throw new RuntimeException("Invalid sts install directory! '${stsDir}' either does not exist or is not a directory");
-        }
-
-        def desktopJar = file(props["spire.dir"] + "/desktop-1.0.jar")
-        if(!desktopJar.exists()) throw new RuntimeException("'${stsDir}' does not appear to be a valid slay the spire install directory!")
+        def props = getInstallProperties()
+        enforceStsDirExists(props)
+        def stsDir = slayTheSpireDir(props);
 
         def os = DefaultNativePlatform.currentOperatingSystem;
 
@@ -153,4 +146,49 @@ task install {
             rename "(.*)-${version}.jar", '$1.jar'
         }
     }
+}
+
+def getInstallProperties() {
+    def props = new Properties()
+    def failed
+    def targetPropFile = file("${projectDir}/install.properties")
+    try (def fis = new FileInputStream(targetPropFile)) {
+        props.load(fis)
+        logger.lifecycle("loaded props: ${props["spire.dir"]}")
+        def target = props["spire.dir"]
+        failed = target == null || target == ""
+    } catch(IOException e) {
+        failed = true
+        logger.lifecycle("Failed to read install.properties: ", e.message)
+        logger.lifecycle("Please put the absolute path to your slay the spire installation (The directory containing desktop-1.0.jar) as the value of spire.dir in ${targetPropFile.absolutePath}")
+        props.put("spire.dir", "")
+        try (def fos = new FileOutputStream(file(targetPropFile))) {
+            props.save(fos, null)
+        }
+    }
+
+    if(failed) {
+        throw new RuntimeException("No sts install directory given. Please populate '${targetPropFile.absolutePath}'s \"spire.dir\" property with your slay-the-spire directory (the one with desktop-1.0.jar). ");
+    }
+
+    return props
+}
+
+def slayTheSpireJar(File stsDir) {
+    file(stsDir.absolutePath + "/desktop-1.0.jar")
+}
+
+def slayTheSpireDir(Properties props) {
+    file(props["spire.dir"])
+}
+
+def enforceStsDirExists(Properties props) {
+    def stsDir = slayTheSpireDir(props)
+    if(!stsDir.exists() || !stsDir.isDirectory()) {
+        logger.lifecycle("${stsDir} does not appear to be a directory/exist!")
+        throw new RuntimeException("Invalid sts install directory! '${stsDir}' either does not exist or is not a directory");
+    }
+
+    def desktopJar = slayTheSpireJar(stsDir)
+    if(!desktopJar.exists()) throw new RuntimeException("'${stsDir}' does not appear to be a valid slay the spire install directory!")
 }
