@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import com.vdurmont.semver4j.Semver;
 import com.vdurmont.semver4j.SemverException;
+import org.slf4j.*;
 
 import java.io.*;
 import java.lang.reflect.Modifier;
@@ -11,11 +12,11 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
+import java.util.jar.*;
 
-public class ModInfo implements Serializable
-{
+public class ModInfo implements Serializable {
+    private static final Logger LOG = LoggerFactory.getLogger(ModInfo.class);
     /**
      * 
      */
@@ -84,31 +85,66 @@ public class ModInfo implements Serializable
             .registerTypeAdapter(Semver.class, new VersionDeserializer())
             .setDateFormat("MM-dd-yyyy")
             .create();
+        try (JarFile file = new JarFile(mod_jar)) {
+            Enumeration<JarEntry> entries = file.entries();
+            Set<JarEntry> potentialJsons = new HashSet<>();
 
-        URLClassLoader loader = null;
-        try {
-            loader = new URLClassLoader(new URL[] {mod_jar.toURI().toURL()}, null);
-            InputStream in = loader.getResourceAsStream("src/main/resources/ModTheSpire.json");
-            if (in == null) {
-                // Fallback to old info file
-                ModInfo info = ReadModInfoOld(mod_jar);
+            while(entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if(entry.getName().endsWith("ModTheSpire.json")) {
+                    potentialJsons.add(entry);
+                }
+            }
+
+            JarEntry target = null;
+            if(potentialJsons.size() == 0) {
+                LOG.info("Failed to locate ANY ModTheSpire.json in {}", mod_jar.getName());
+                return null;
+            }
+
+            if(potentialJsons.size() > 1) {
+                throw new RuntimeException("Politely tell the owner of {} to only include 1 ModTheSpire.json in their jars. Alternatively politely request ModTheSpire to handle the case of multiple jsons.");
+            }
+
+            target = potentialJsons.iterator().next();
+
+            InputStream stream = file.getInputStream(target);
+            try(
+                InputStream entryStream = file.getInputStream(target);
+                InputStreamReader reader = new InputStreamReader(entryStream, StandardCharsets.UTF_8)) {
+                ModInfo info = gson.fromJson(reader, ModInfo.class);
                 info.jarURL = mod_jar.toURI().toURL();
                 return info;
             }
-            ModInfo info = gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), ModInfo.class);
-            info.jarURL = mod_jar.toURI().toURL();
-            in.close();
-            return info;
-        } catch (Exception e) {
-            System.out.println(mod_jar);
-            e.printStackTrace();
-        } finally {
-            if (loader != null) {
-                closeLoader(loader);
-            }
+        } catch(IOException e) {
+            throw new RuntimeException(e);
         }
 
-        return null;
+        // URLClassLoader loader = null;
+        // try {
+        //     JarFile file = new JarFile(mod_jar);
+        //     loader = new URLClassLoader(new URL[] {mod_jar.toURI().toURL()}, null);
+        //     InputStream in = loader.getResourceAsStream("/ModTheSpire.json");
+        //     if (in == null) {
+        //         // Fallback to old info file
+        //         ModInfo info = ReadModInfoOld(mod_jar);
+        //         info.jarURL = mod_jar.toURI().toURL();
+        //         return info;
+        //     }
+        //     ModInfo info = gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), ModInfo.class);
+        //     info.jarURL = mod_jar.toURI().toURL();
+        //     in.close();
+        //     return info;
+        // } catch (Exception e) {
+        //     System.out.println(mod_jar);
+        //     e.printStackTrace();
+        // } finally {
+        //     if (loader != null) {
+        //         closeLoader(loader);
+        //     }
+        // }
+        //
+        // return null;
     }
 
     private static ModInfo ReadModInfoOld(File mod_jar)

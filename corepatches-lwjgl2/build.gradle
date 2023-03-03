@@ -1,12 +1,12 @@
-plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-}
 
 dependencies {
     implementation project(':patches')
     compileOnly project(':core')
+    compileOnly 'org.javassist:javassist:3.29.2-GA'
 }
 
 jar {
     archiveFileName = "$project.version-corepatches.jar"
+    from { configurations.runtimeClasspath.collect {it.isDirectory() ? it : zipTree(it)} }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }

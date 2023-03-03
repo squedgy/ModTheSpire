@@ -1,1 +1,1 @@
-include 'core', 'corepatches-lwjgl2', 'corepatches-lwjgl3', 'patches'
+include 'core', 'corepatches-lwjgl2', 'corepatches-lwjgl3', 'patches', "kotlin", "lwjgl3", "agent"

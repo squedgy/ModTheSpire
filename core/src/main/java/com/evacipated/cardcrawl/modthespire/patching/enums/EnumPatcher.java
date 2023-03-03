@@ -256,6 +256,8 @@ public class EnumPatcher {
                             .getField(enumName);
                         ReflectionHelper.setStaticFinalField(constantField, enumValue);
                     } catch(NoSuchFieldException ignored) {
+                    } catch(InvocationTargetException e) {
+                        throw new RuntimeException(e);
                     }
 
                     field.setAccessible(true);

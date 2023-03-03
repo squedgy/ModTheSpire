@@ -1,0 +1,29 @@
+repositories {
+    maven {
+        url = uri("https://repository.ow2.org/nexus/content/repositories/releases/org/ow2/asm/")
+    }
+}
+
+dependencies {
+//    implementation group: 'org.ow2.asm', name: 'asm', version: '9.4'
+//    implementation group: 'org.ow2.asm', name: 'asm-util', version: '9.4'
+    implementation group: 'org.javassist', name: 'javassist', version: '3.29.2-GA'
+    implementation group: 'com.vdurmont', name: 'semver4j', version: '2.2.0'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = sourceCompatibility
+
+jar {
+    archiveFileName = "squedgy-agent.jar"
+    from { configurations.runtimeClasspath.collect {it.isDirectory() ? it : zipTree(it)} }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    manifest {
+        attributes(
+            "Premain-Class": "com.squedgy.mts.agent.Agent",
+            "Can-Retransform-Classes": "true",
+            "Can-Redefine-Classes": "true",
+        )
+    }
+}

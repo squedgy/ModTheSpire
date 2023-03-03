@@ -90,23 +90,24 @@ public class MTSClassLoader extends URLClassLoader {
         if(name.equals("org.apache.logging.log4j.core.lookup.JndiLookup")) {
             throw new ClassNotFoundException();
         }
-        if(name.startsWith("com.codedisaster.steamworks") ||
-           name.startsWith("com.google.gson") ||
-           name.equals("com.megacrit.cardcrawl.desktop.DesktopLauncher")) {
+
+        if(
+            name.startsWith("com.codedisaster.steamworks") ||
+            name.startsWith("com.google.gson") ||
+            name.equals("com.megacrit.cardcrawl.desktop.DesktopLauncher")
+        ) {
             Class<?> c = findLoadedClass(name);
-            if(c == null) {
-                c = findClass(name);
-                if(c == null) {
-                    c = super.loadClass(name);
-                }
-            }
+
+            if(c == null) c = findClass(name);
+            if(c == null) c = super.loadClass(name);
+
             return c;
-        } else {
-            try {
-                return parent.loadClass(name);
-            } catch(ClassNotFoundException e) {
-                return super.loadClass(name);
-            }
+        }
+
+        try {
+            return parent.loadClass(name);
+        } catch(ClassNotFoundException e) {
+            return super.loadClass(name);
         }
     }
 

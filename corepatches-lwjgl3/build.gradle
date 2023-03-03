@@ -1,31 +1,19 @@
-plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-}
-
 dependencies {
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
-    implementation 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.9.5'
-    implementation 'com.badlogicgames.gdx:gdx-controllers-lwjgl3:1.9.5'
+    implementation project(":lwjgl3")
+//    implementation 'org.lwjgl:lwjgl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+//    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
+//    implementation 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.9.5'
+//    implementation 'com.badlogicgames.gdx:gdx-controllers-lwjgl3:1.9.5'
 
     compileOnly project(":core")
+    compileOnly 'org.javassist:javassist:3.29.2-GA'
     implementation project(":patches")
 }
 
 jar {
+    from { configurations.runtimeClasspath.collect {it.isDirectory() ? it : zipTree(it)} }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     archiveFileName = "$project.version-corepatches-lwjgl3.jar"
 }

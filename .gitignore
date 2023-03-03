@@ -56,5 +56,6 @@ dependency-reduced-pom.xml
 # maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
 
+/build/
 /*/build/
 .gradle

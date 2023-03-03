@@ -32,19 +32,19 @@ public class ModSelectWindow extends JFrame
     private static final String PACKAGE_OPTION = "Package";
 
     static final Image APP_ICON = Toolkit.getDefaultToolkit().createImage(ModSelectWindow.class.getResource(
-          "/src/main/resources/assets/icon.png"));
+          "/assets/icon.png"));
     static final Icon ICON_UPDATE   = new ImageIcon(ModSelectWindow.class.getResource(
-          "/src/main/resources/assets/update.gif"));
+          "/assets/update.gif"));
     static final Icon ICON_LOAD     = new ImageIcon(ModSelectWindow.class.getResource(
-          "/src/main/resources/assets/ajax-loader.gif"));
+          "/assets/ajax-loader.gif"));
     static final Icon ICON_GOOD     = new ImageIcon(ModSelectWindow.class.getResource(
-          "/src/main/resources/assets/good.gif"));
+          "/assets/good.gif"));
     static final Icon ICON_WARNING  = new ImageIcon(ModSelectWindow.class.getResource(
-          "/src/main/resources/assets/warning.gif"));
+          "/assets/warning.gif"));
     static final Icon ICON_ERROR    = new ImageIcon(ModSelectWindow.class.getResource(
-          "/src/main/resources/assets/error.gif"));
+          "/assets/error.gif"));
     static final Icon ICON_WORKSHOP = new ImageIcon(ModSelectWindow.class.getResource(
-          "/src/main/resources/assets/workshop.gif"));
+          "/assets/workshop.gif"));
 
     private ModInfo[] info;
     private boolean showingLog = false;

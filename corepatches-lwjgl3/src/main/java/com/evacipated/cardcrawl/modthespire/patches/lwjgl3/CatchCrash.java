@@ -1,6 +1,7 @@
 package com.evacipated.cardcrawl.modthespire.patches.lwjgl3;
 
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.backends.lwjgl3.*;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.patches.HandleCrash;
 import javassist.CannotCompileException;
@@ -10,7 +11,8 @@ import javassist.expr.Instanceof;
 
 @SpirePatch(
     clz=Lwjgl3Application.class,
-    method=SpirePatch.CONSTRUCTOR
+    method=SpirePatch.CONSTRUCTOR,
+    paramtypez = {ApplicationListener.class, Lwjgl3ApplicationConfiguration.class}
 )
 public class CatchCrash
 {

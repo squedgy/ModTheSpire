@@ -1,13 +1,27 @@
 package com.evacipated.cardcrawl.modthespire;
 
+import jdk.internal.reflect.ConstructorAccessor;
 import org.clapper.util.classutil.*;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class EnumBusterReflect {
+    private static final Method acquireAccessor, getAccessor;
+
+    static {
+        try {
+            acquireAccessor = Constructor.class.getDeclaredMethod("acquireConstructorAccessor");
+            acquireAccessor.setAccessible(true);
+
+            getAccessor = Constructor.class.getDeclaredMethod("getConstructorAccessor");
+            getAccessor.setAccessible(true);
+        } catch(NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
     private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
@@ -76,7 +90,7 @@ public class EnumBusterReflect {
     private boolean tryReplaceExisting(
         Enum<?> next,
         Enum<?>[] values
-    ) throws NoSuchFieldException, IllegalAccessException {
+    ) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
         for(int i = 0; i < values.length; i++) {
             Enum<?> value = values[i];
             if(value.name()
@@ -95,7 +109,7 @@ public class EnumBusterReflect {
         Enum<?> next,
         Enum<?>[] values,
         Field valuesField
-    ) throws NoSuchFieldException, IllegalAccessException {
+    ) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
         Enum<?>[] newValues = Arrays.copyOf(values, values.length + 1);
         newValues[newValues.length - 1] = next;
         ReflectionHelper.setStaticFinalField(valuesField, newValues);
@@ -154,7 +168,7 @@ public class EnumBusterReflect {
 
     private Enum<?> constructEnum(
         Class<?> clazz,
-        Constructor ca,
+        Constructor constr,
         String value,
         int ordinal,
         Object[] additional
@@ -162,8 +176,23 @@ public class EnumBusterReflect {
         Object[] parms = new Object[additional.length + 2];
         parms[0] = value;
         parms[1] = ordinal;
+
+        boolean wasAccessible = constr.isAccessible();
+        // Allow access, temporarily
+        constr.setAccessible(true);
+
+        // We need to skip the access/enum checks that happen within Constructor#newInstance.
+        // So, we directly use the internal field. No idea how standard the approach is
+        // Different JREs may not react differently. Clearly
+        ConstructorAccessor accessor = (ConstructorAccessor) EnumBusterReflect.getAccessor.invoke(constr);
+        if(accessor == null) accessor = (ConstructorAccessor) EnumBusterReflect.acquireAccessor.invoke(constr);
+
         System.arraycopy(additional, 0, parms, 2, additional.length);
-        return (Enum<?>) clazz.cast(ca.newInstance(parms));
+        Enum<?> ret = (Enum<?>) clazz.cast(accessor.newInstance(parms));
+
+        constr.setAccessible(wasAccessible);
+
+        return ret;
     }
 
     /**
@@ -183,7 +212,8 @@ public class EnumBusterReflect {
         }
     }
 
-    private void replaceConstant(Enum<?> e) throws IllegalAccessException, NoSuchFieldException {
+    private void replaceConstant(Enum<?> e)
+        throws IllegalAccessException, NoSuchFieldException, InvocationTargetException {
         Field[] fields = clazz.getDeclaredFields();
         for(Field field : fields) {
             if(field.getName()
@@ -193,7 +223,8 @@ public class EnumBusterReflect {
         }
     }
 
-    private void blankOutConstant(Enum<?> e) throws IllegalAccessException, NoSuchFieldException {
+    private void blankOutConstant(Enum<?> e)
+        throws IllegalAccessException, NoSuchFieldException, InvocationTargetException {
         Field[] fields = clazz.getDeclaredFields();
         for(Field field : fields) {
             if(field.getName()
@@ -309,7 +340,8 @@ public class EnumBusterReflect {
             }
         }
 
-        private void undo() throws NoSuchFieldException, IllegalAccessException {
+        private void undo()
+            throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
             Field valuesField = findValuesField();
             ReflectionHelper.setStaticFinalField(valuesField, values);
 
@@ -318,7 +350,7 @@ public class EnumBusterReflect {
             }
 
             // reset all of the constants defined inside the enum
-            Map<String, Enum<?>> valuesMap = new HashMap<String, Enum<?>>();
+            Map<String, Enum<?>> valuesMap = new HashMap<>();
             for(Enum<?> e : values) {
                 valuesMap.put(e.name(), e);
             }

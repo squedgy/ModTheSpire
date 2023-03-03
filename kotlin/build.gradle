@@ -1,0 +1,12 @@
+dependencies {
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.4.10'
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.4.10'
+}
+
+jar {
+    archiveName = "kotlin.jar"
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}

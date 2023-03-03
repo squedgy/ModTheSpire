@@ -1,0 +1,38 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.javassist:javassist:3.29.2-GA'
+    implementation 'org.scannotation:scannotation:1.0.3'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'org.ow2.asm:asm:9.4'
+    implementation 'com.vdurmont:semver4j:2.2.0'
+    implementation 'com.code-disaster.steamworks4j:steamworks4j:1.9.0'
+    implementation group: "org.slf4j", name: "slf4j-api", version: "1.7.26"
+}
+
+task LoadVersion {
+    doLast {
+        logger.lifecycle("Adding version properties")
+        def version = file("$buildDir/resources/main/META-INF/version.prop")
+        def parent = version.parentFile;
+        if(!parent.exists() && !parent.mkdirs()) {
+            throw new RuntimeException("Failed to make META-INF")
+        }
+        version.text = "version=$project.version"
+    }
+}
+
+mainClassName = "com.evacipated.cardcrawl.modthespire.Loader"
+
+jar {
+    dependsOn LoadVersion
+    manifest {
+        attributes(
+            "Main-Class": mainClassName
+        )
+    }
+}

@@ -1,3 +1,6 @@
 dependencies {
-    implementation project(':core')
+    compileOnly project(':core')
+    compileOnly 'org.javassist:javassist:3.29.2-GA'
+    compileOnly 'org.apache.commons:commons-lang3:3.7'
+    compileOnly 'com.vdurmont:semver4j:2.2.0'
 }
