@@ -305,6 +305,14 @@ public class Loader {
             if(steamDeck != null) {
                 LWJGL3_ENABLED = LWJGL3_ENABLED || steamDeck;
             }
+
+            Semver jvmVersion = new Semver(System.getProperty("java.vm.version"), Semver.SemverType.LOOSE);
+
+            // Since 11 (OpenJDK) works I'm setting it to 12, if there are issues we can change this test
+            if(!LWJGL3_ENABLED && jvmVersion.isGreaterThanOrEqualTo(new Semver("12.0.0", Semver.SemverType.LOOSE))) {
+                LOG.info("Forcing LWJGL3 usage as the java version is detected to be {} which is assumed to not work with LWJGL 2.", jvmVersion);
+                LWJGL3_ENABLED = true;
+            }
             reader.close();
         } catch(IOException e) {
             e.printStackTrace();
