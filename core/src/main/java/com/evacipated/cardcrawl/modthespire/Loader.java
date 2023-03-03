@@ -306,13 +306,16 @@ public class Loader {
                 LWJGL3_ENABLED = LWJGL3_ENABLED || steamDeck;
             }
 
-            Semver jvmVersion = new Semver(System.getProperty("java.vm.version"), Semver.SemverType.LOOSE);
+            String javaVersion = System.getProperty("java.version");
+            Semver jvmVersion = new Semver(javaVersion, Semver.SemverType.LOOSE);
+            Semver minLwjgl3RequiredVersion = new Semver("12.0.0", Semver.SemverType.LOOSE);
 
             // Since 11 (OpenJDK) works I'm setting it to 12, if there are issues we can change this test
-            if(!LWJGL3_ENABLED && jvmVersion.isGreaterThanOrEqualTo(new Semver("12.0.0", Semver.SemverType.LOOSE))) {
-                LOG.info("Forcing LWJGL3 usage as the java version is detected to be {} which is assumed to not work with LWJGL 2.", jvmVersion);
+            if(!LWJGL3_ENABLED && javaVersion.startsWith("1.") && jvmVersion.isGreaterThanOrEqualTo(minLwjgl3RequiredVersion)) {
+                LOG.info("Forcing LWJGL3 usage as the java version is detected to be {} which is assumed to not work with LWJGL 2.", javaVersion);
                 LWJGL3_ENABLED = true;
             }
+
             reader.close();
         } catch(IOException e) {
             e.printStackTrace();
@@ -391,11 +394,14 @@ public class Loader {
             ex.warnAboutMissingVersions();
 
             String java_version = System.getProperty("java.version");
-            if(!java_version.startsWith("1.8")) {
-                String msg =
-                    "ModTheSpire requires Java version 8 to run properly.\nYou are currently using Java " +
-                    java_version;
-                JOptionPane.showMessageDialog(null, msg, "Warning", JOptionPane.WARNING_MESSAGE);
+            // old format (pre java 9)
+            if(java_version.startsWith("1.") && !java_version.startsWith("1.8")) {
+                String message = String.join(
+                    "\n",
+                    "ModTheSpire requires, at least, Java 8 to run properly.",
+                    "You are currently using Java " + java_version
+                );
+                JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
             }
 
             ex.startCheckingForMTSUpdate();
